@@ -1,40 +1,30 @@
-import os
+from contextlib import asynccontextmanager
+import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
-from controllers.climate_controller import router as climate_router
-from middleware.custom_middleware import add_logging_middleware
+from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
+from starlette.middleware.sessions import SessionMiddleware
+from starlette.middleware.trustedhost import TrustedHostMiddleware
+from starlette.middleware.gzip import GZipMiddleware
+from controllers.climate import router as climate_router
+from config.mongodb import MongoDBClient
 
-# Configuration
-PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")
-PROJECT_LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION")
-DATABASE_NAME = os.environ.get("DATABASE_NAME")
-COLLECTION_NAME = os.environ.get("COLLECTION_NAME")
-CONNECTION_STRING = os.environ.get("CONNECTION_STRING")
+app = FastAPI()
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+# app.add_middleware(HTTPSRedirectMiddleware)
+app.add_middleware(
+    TrustedHostMiddleware, allowed_hosts=["yourdomain.com", "www.yourdomain.com", "localhost", "127.0.0.1"]
+)
 
-# Initialize FastAPI app
-app = FastAPI(title="Climate Lens API", version="1.0.0")
-
-# Apply CORS middleware
+# CORS - cross-origin security
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000", "https://yourfrontend.com"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Apply logging middleware
-add_logging_middleware(app)
+# --- Router Registration ---
+app.include_router(climate_router)
 
-# Include routers
-app.include_router(climate_router, prefix="/api", tags=["climate"])
-
-# Root endpoint
-@app.get("/")
-async def root():
-    return {"message": "Welcome to the Climate Lens API!"}
-
-# Run the server
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)

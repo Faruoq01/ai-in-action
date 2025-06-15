@@ -1,9 +1,14 @@
 from pydantic import BaseModel
-from typing import List, Dict
 
-class ClimateQuery(BaseModel):
-    query: str
-    functional_tags: List[str]
+class Item(BaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    tax: float | None = None
 
-class ToolOutput(BaseModel):
-    outputs: Dict[str, str | float | Dict]
+class User(BaseModel):
+    name: str
+    email: str
+    age: int
+
+
