@@ -1,13 +1,10 @@
-from contextlib import asynccontextmanager
-import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
-from starlette.middleware.sessions import SessionMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 from starlette.middleware.gzip import GZipMiddleware
-from controllers.climate import router as climate_router
-from config.mongodb import MongoDBClient
+from controllers.user import router as climate_router
+from controllers.prompt import router as prompt_router
 
 app = FastAPI()
 app.add_middleware(GZipMiddleware, minimum_size=1000)
@@ -26,5 +23,6 @@ app.add_middleware(
 )
 
 # --- Router Registration ---
-app.include_router(climate_router)
+app.include_router(climate_router, prefix="/api/v1", tags=["Climate"])
+app.include_router(prompt_router, prefix="/api/v1", tags=["Prompt"])
 

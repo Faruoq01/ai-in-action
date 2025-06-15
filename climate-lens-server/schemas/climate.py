@@ -11,4 +11,10 @@ class User(BaseModel):
     email: str
     age: int
 
+class PromptRequest(BaseModel):
+    query: str
+
+class PromptResponse(BaseModel):
+    result: str | dict | float
+
 
