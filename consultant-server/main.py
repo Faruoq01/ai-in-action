@@ -11,7 +11,7 @@ app = FastAPI()
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 app.add_middleware(HTTPSRedirectMiddleware)
 app.add_middleware(
-    TrustedHostMiddleware, allowed_hosts=["api.smart-consultant.online", "localhost", "127.0.0.1"]
+    TrustedHostMiddleware, allowed_hosts=["api.smart-consultant.online", "smart-consultant.online", "localhost", "127.0.0.1"]
 )
 
 # CORS - cross-origin security
@@ -38,4 +38,5 @@ async def webhook_handler(request: Request):
 
     subprocess.Popen(["./deploy.sh"])
     return {"status": "OK"}
+
 
