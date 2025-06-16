@@ -20,5 +20,7 @@ jobs:
         username: ${{ secrets.SERVER_USER }}    # your SSH username
         key: ${{ secrets.SERVER_SSH_KEY }}      # your private SSH key (GitHub secret)
         script: |
+          echo "Current working dir: $(pwd)"
           cd /home/smart-consultant/ai-in-action
+          ls -l
           ./deploy.sh
