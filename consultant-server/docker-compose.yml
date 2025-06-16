@@ -15,5 +15,4 @@ services:
       - "8000:8000"
     restart: unless-stopped
 
-# docker buildx create --use
-# docker buildx build --platform linux/amd64 -t faruoq01/ai-in-action:smart-consultant-api --push .
+# docker-compose up -d --build

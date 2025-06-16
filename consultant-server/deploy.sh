@@ -1,5 +1,0 @@
-# deploy.sh
-#!/bin/bash
-
-docker-compose pull
-docker-compose up -d

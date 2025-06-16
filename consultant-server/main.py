@@ -9,15 +9,15 @@ from controllers.prompt import router as prompt_router
 
 app = FastAPI()
 app.add_middleware(GZipMiddleware, minimum_size=1000)
-# app.add_middleware(HTTPSRedirectMiddleware)
+app.add_middleware(HTTPSRedirectMiddleware)
 app.add_middleware(
-    TrustedHostMiddleware, allowed_hosts=["yourdomain.com", "www.yourdomain.com", "localhost", "127.0.0.1"]
+    TrustedHostMiddleware, allowed_hosts=["api.smart-consultant.online", "localhost", "127.0.0.1"]
 )
 
 # CORS - cross-origin security
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://yourfrontend.com"], 
+    allow_origins=["http://localhost:3000", "https://smart-consultant.online"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

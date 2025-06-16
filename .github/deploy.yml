@@ -1,0 +1,24 @@
+name: Deploy on Merge
+
+on:
+  push:
+    branches:
+      - main  # run this workflow on pushes to main (merges)
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Run deployment script on server
+      uses: appleboy/ssh-action@v0.1.7
+      with:
+        host: ${{ secrets.SERVER_HOST }}        # your server IP or domain
+        username: ${{ secrets.SERVER_USER }}    # your SSH username
+        key: ${{ secrets.SERVER_SSH_KEY }}      # your private SSH key (GitHub secret)
+        script: |
+          cd /home/smart-consultant/ai-in-action
+          ./deploy.sh
