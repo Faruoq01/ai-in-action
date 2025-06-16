@@ -71,7 +71,7 @@ class AgentService:
     def get_tool_agent(self, tag):
         return self.tool_agents.get(tag)
     
-
+    
     async def generate_all_embeddings(self):
         db = MongoDBClient.get_database()
         collection = db["health_record"]
