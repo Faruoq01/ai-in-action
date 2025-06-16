@@ -34,7 +34,7 @@ async def root():
 @app.post("/deploy")
 async def webhook_handler(request: Request):
     payload = await request.json()
-    print("Received webhook:", payload)
+    print("Received webhook from main:", payload)
 
     subprocess.Popen(["./deploy.sh"])
     return {"status": "OK"}
