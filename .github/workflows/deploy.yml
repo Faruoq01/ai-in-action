@@ -21,6 +21,6 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}      
         script: |
           echo "Current working dir: $(pwd)"
-          cd /home/smart-consultant/ai-in-action
+          cd /home/ai-in-action
           ls -l
           ./deploy.sh
