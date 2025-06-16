@@ -1,3 +1,4 @@
+import asyncio
 import os
 import vertexai
 from vertexai.language_models import TextEmbeddingModel
@@ -73,9 +74,8 @@ class AgentService:
 
     async def generate_all_embeddings(self):
         db = MongoDBClient.get_database()
-        collection = db["health_record"]  
+        collection = db["health_record"]
 
-        # Find documents where 'embeddings' is either missing or null
         cursor = collection.find({
             "$or": [
                 {"embeddings": {"$exists": False}},
@@ -83,10 +83,9 @@ class AgentService:
             ]
         })
 
-        # Await conversion to list to get all docs
         docs = await cursor.to_list(length=None)
 
-        async for doc in docs:
+        for doc in docs:
             interpretation_text = doc.get("interpretation", "")
             if interpretation_text:
                 embedding = self.generate_embeddings(interpretation_text)
@@ -97,6 +96,11 @@ class AgentService:
                 {"_id": doc["_id"]},
                 {"$set": {"embeddings": embedding}}
             )
+
             print(f"Updated document {doc['_id']} with embeddings")
+
+            # Wait ~72 seconds before next request (5 per 6 mins)
+            await asyncio.sleep(72)
+            print("hello im done")
 
         return "Completed"
