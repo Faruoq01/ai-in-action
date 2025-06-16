@@ -29,7 +29,7 @@ app.include_router(prompt_router, prefix="/api/v1", tags=["Prompt"])
 
 @app.get("/")
 async def root():
-    return "Hello welcome to smart health consultant"
+    return "Hello welcome to smart health consultant, login and try it out"
 
 @app.post("/deploy")
 async def webhook_handler(request: Request):
