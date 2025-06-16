@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+import subprocess
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
@@ -29,4 +30,12 @@ app.include_router(prompt_router, prefix="/api/v1", tags=["Prompt"])
 @app.get("/")
 async def root():
     return "Hello welcome to smart health consultant"
+
+@app.post("/deploy")
+async def webhook_handler(request: Request):
+    payload = await request.json()
+    print("Received webhook:", payload)
+
+    subprocess.Popen(["./deploy.sh"])
+    return {"status": "OK"}
 

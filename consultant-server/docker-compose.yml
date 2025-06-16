@@ -3,6 +3,7 @@ version: '3.8'
 services:
   smart-consultant-api:
     build: .
+    image: faruoq01/ai-in-action:smart-consultant-api
     container_name: smart-consultant-api
     volumes:
       - ./services/gen-lang-client-0982532504-331f09803569.json:/code/credentials.json:ro
@@ -12,3 +13,7 @@ services:
       - .env
     ports:
       - "8000:8000"
+    restart: unless-stopped
+
+# docker buildx create --use
+# docker buildx build --platform linux/amd64 -t faruoq01/ai-in-action:smart-consultant-api --push .

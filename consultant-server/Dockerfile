@@ -9,6 +9,3 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 COPY . /code
 
 CMD ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000", "main:app"]
-
-# docker build -t smart-consultant-api .
-# docker run -p 8000:8000 --env-file .env smart-consultant-server
