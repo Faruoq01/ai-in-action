@@ -1,39 +1,45 @@
-class ClimateTools:
-    def agriculture_calendar(self, record):
-        return "Advice: Consider planting drought-resistant crops due to moderate rainfall."
+from typing import Any, Dict
 
-    def flood_risk_alert(self, record):
-        return "Alert: Low flood risk; rainfall levels are below threshold."
 
-    def malaria_risk_map(self, record):
-        return "Risk: Moderate malaria risk due to high humidity and warm temperatures."
+class MedicalTools:
+    
+    def cardiology(record: Dict[str, Any]) -> str:
+        """
+        Agent explains cardiac diagnoses, interprets test results (e.g., ECG, stress test),
+        and advises on red-flag symptoms.
+        """
+        return "Insight: Likely cardiac cause due to ST-elevation and elevated troponin. Urgent cardiology referral advised."
 
-    def solar_site_recommendation(self, record):
-        return "Recommendation: Moderate solar potential; consider panel orientation to maximize capture."
+    def neurology(record: Dict[str, Any]) -> str:
+        """
+        (Not hit in these samples) Would handle seizures, strokes, MS, and other neurological symptoms.
+        """
+        return "Insight: Neurological agent not triggered in this batch."
 
-    def wind_site_recommendation(self, record):
-        return "Recommendation: Adequate wind speeds for small-scale turbines."
+    def autoimmune(record: Dict[str, Any]) -> str:
+        """
+        Explains systemic autoimmune disorders (e.g., lupus, Cushing's),
+        interprets immunological labs, and assesses multi-system symptoms.
+        """
+        return "Insight: Autoimmune etiology suspected given ANA positivity and multi-system symptoms."
 
-    def climate_insurance_index(self, record):
-        return 0.75
+    def pharmacology(record: Dict[str, Any]) -> str:
+        """
+        Audits medication regimens, flags dose issues, drug interactions,
+        and highlights inappropriate medications, especially in pediatrics or elderly patients.
+        """
+        return "Audit: Prednisone dosage may be too high for long-term use. Consider tapering or gastroprotection."
 
-    def urban_heat_monitor(self, record):
-        return "Warning: No heatwave detected."
+    def diagnostic_uncertainty(record: Dict[str, Any]) -> str:
+        """
+        Triggers diagnostic reasoning: evaluates plausibility of current hypotheses,
+        suggests follow-ups or differential diagnoses.
+        """
+        return "Reasoning: Current findings are insufficient for a single diagnosis. Suggest further testing (e.g., MRI, CRP)."
 
-    def conflict_risk_model(self, record):
-        return "Risk: Low conflict risk."
-
-    def water_scarcity_monitor(self, record):
-        return "Status: Water resources adequate."
-
-    def infra_design_guide(self, record):
-        return "Guide: Use reinforced foundations for damp soils."
-
-    def climate_education_story(self, record):
-        return "Story: Coastal communities adapt to changing rainfall patterns."
-
-    def ward_trend_analysis(self, record_list):
-        return "Trend: Increasing temperature trend over past 5 years."
-
-    def extreme_event_flagger(self, record):
-        return "Flag: No anomalies detected."
+    def patient_education(record: Dict[str, Any]) -> str:
+        """
+        Generates simplified explanations and emotional support tailored to patient anxieties,
+        often summarizing complex medical insights in accessible language.
+        """
+        return "Explanation: Your symptoms may relate to how your immune system behaves. We'll explain this clearly and supportively."

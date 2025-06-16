@@ -26,3 +26,7 @@ app.add_middleware(
 app.include_router(climate_router, prefix="/api/v1", tags=["Climate"])
 app.include_router(prompt_router, prefix="/api/v1", tags=["Prompt"])
 
+@app.get("/")
+async def root():
+    return "Hello welcome to smart health consultant"
+

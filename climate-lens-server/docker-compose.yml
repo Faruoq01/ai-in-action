@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  smart-consultant-api:
+    build: .
+    container_name: smart-consultant-api
+    volumes:
+      - ./services/gen-lang-client-0982532504-331f09803569.json:/code/credentials.json:ro
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/code/credentials.json
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
