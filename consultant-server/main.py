@@ -1,13 +1,11 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 from controllers.user import router as climate_router
 from controllers.prompt import router as prompt_router
 
 app = FastAPI()
 app.add_middleware(GZipMiddleware, minimum_size=1000)
-app.add_middleware(HTTPSRedirectMiddleware)
 
 # CORS - cross-origin security
 app.add_middleware(
