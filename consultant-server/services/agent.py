@@ -3,6 +3,7 @@ import vertexai
 from vertexai.language_models import TextEmbeddingModel
 from services.tools import MedicalTools
 from dotenv import load_dotenv
+from config.mongodb import MongoDBClient
 
 load_dotenv()
 
@@ -68,3 +69,34 @@ class AgentService:
 
     def get_tool_agent(self, tag):
         return self.tool_agents.get(tag)
+    
+
+    async def generate_all_embeddings(self):
+        db = MongoDBClient.get_database()
+        collection = db["health_record"]  
+
+        # Find documents where 'embeddings' is either missing or null
+        cursor = collection.find({
+            "$or": [
+                {"embeddings": {"$exists": False}},
+                {"embeddings": None}
+            ]
+        })
+
+        # Await conversion to list to get all docs
+        docs = await cursor.to_list(length=None)
+
+        async for doc in docs:
+            interpretation_text = doc.get("interpretation", "")
+            if interpretation_text:
+                embedding = self.generate_embeddings(interpretation_text)
+            else:
+                embedding = None
+
+            await collection.update_one(
+                {"_id": doc["_id"]},
+                {"$set": {"embeddings": embedding}}
+            )
+            print(f"Updated document {doc['_id']} with embeddings")
+
+        return "Completed"

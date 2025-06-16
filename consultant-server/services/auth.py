@@ -1,0 +1,1 @@
+# gcloud auth activate-service-account --key-file="./services/gen-lang-client-0982532504-331f09803569.json"

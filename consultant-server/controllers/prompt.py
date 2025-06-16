@@ -25,3 +25,10 @@ def run_prompt(request: PromptRequest):
         raise HTTPException(status_code=404, detail=result["error"])
     
     return result
+
+@router.get("/embeddings", response_model=PromptResponse)
+async def generate_embeddings():
+    status = await agent_service.generate_all_embeddings()
+    return PromptResponse(result=status)  
+
+
