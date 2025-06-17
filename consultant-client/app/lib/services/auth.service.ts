@@ -28,4 +28,13 @@ export const AuthService = {
             return { error: true, payload: e.message }
         }
     },
+
+    searchQuery: async(query: any) => {
+        try{
+            const { data } = await API.post("/prompt", query, { withCredentials: true });
+            return { error: false, payload: data };
+        }catch(e: any){
+            return { error: true, payload: e.message }
+        }
+    },
 }

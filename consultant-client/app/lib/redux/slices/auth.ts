@@ -6,6 +6,7 @@ const initialState: any = {
   isLoggedIn: status? JSON.parse(status): false,
   user: null,
   reload: false,
+  queryResponse: null
 }
 
 const authReducer = createSlice({
@@ -18,11 +19,14 @@ const authReducer = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
+    setQueryResponse: (state, action) => {
+      state.queryResponse = action.payload;
+    },
     setReload: (state, action) => {
-      state.reload = action.payload;
+      state.queryResponse = action.payload;
     }
   },
 })
 
-export const { setLoggin, setUser, setReload } = authReducer.actions
+export const { setLoggin, setUser, setReload, setQueryResponse } = authReducer.actions
 export default authReducer.reducer

@@ -87,22 +87,33 @@ class AgentService:
             - An interpretation of a medical event, typically described by a clinician.
             - A set of functional tags indicating relevant medical domains.
 
-            Your task is to analyze each record and provide:
-            1. **Clinical Concern**: A summary of the medical issue described.
-            2. **Expert Analysis**: A clear and accurate clinical interpretation using your medical expertise.
-            3. **Suggested Action**: Recommended follow-up steps, clarifications, or additional diagnostics.
+            Your task is to analyze all records and summarize everything to provide:
+            1. Clinical Concern: A summary of the medical issue described.
+            2. Expert Analysis: A clear and accurate clinical interpretation using your medical expertise.
+            3. Suggested Action: Recommended follow-up steps, clarifications, or additional diagnostics.
 
             Return your analysis in the following structured format:
 
-            ---
-            ### Record {len(records)}  
-            **Tags**: [functional_tags] 
-            **Concern**: *[your clinical concern here]*  
-            **Analysis**: *[your clinical reasoning and explanation]*  
-            **Suggested Action**: *[your recommendation or follow-up]*  
-            ---
 
-            Return your analysis in the following markdown code block format, sound natural with proper indentation and spacing, so that it can be directly rendered inside a React <pre> component:
+            Concern: 
+            -------
+            your clinical concern here 
+
+            Analysis: 
+            -------
+            your clinical reasoning and explanation
+
+            Suggested 
+            -------
+            Action: your recommendation or follow-up
+
+            ---
+            
+            Leave a bit of space here between Action and Tags
+
+            Tags: functional_tags 
+
+            Return your analysis properly formated and presentable
 
             Here are the records:
             {formatted_records}
