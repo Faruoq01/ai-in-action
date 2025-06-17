@@ -120,7 +120,7 @@ class AgentService:
                 5. Tags
                 [Consolidated list of functional tags, e.g., diagnostic_uncertainty, neurology, patient_education]
 
-            Finally do not forget to format it to look beautiful in a markdown react component.   
+            Finally do not forget to format it to look beautiful in a presentation mode no characters no symbols and consistent font.   
             Here are the records:
             {formatted_records}
             """

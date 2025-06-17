@@ -1,27 +1,12 @@
 version: '3.8'
 
-services:
-  smart-consultant-api:
-    build: .
-    image: faruoq01/ai-in-action:smart-consultant-api
-    container_name: smart-consultant-api
-    volumes:
-      - ./services/gen-lang-client-0982532504-331f09803569.json:/code/credentials.json:ro
-    environment:
-      - GOOGLE_APPLICATION_CREDENTIALS=/code/credentials.json
-    env_file:
-      - .env
-    ports:
-      - "8000:8000"
-    restart: unless-stopped
-
 # services:
 #   smart-consultant-api:
 #     build: .
 #     image: faruoq01/ai-in-action:smart-consultant-api
 #     container_name: smart-consultant-api
 #     volumes:
-#       - /home/ai-in-action/consultant-server/credentials.json:/code/credentials.json:ro
+#       - ./services/gen-lang-client-0982532504-331f09803569.json:/code/credentials.json:ro
 #     environment:
 #       - GOOGLE_APPLICATION_CREDENTIALS=/code/credentials.json
 #     env_file:
@@ -29,5 +14,20 @@ services:
 #     ports:
 #       - "8000:8000"
 #     restart: unless-stopped
+
+services:
+  smart-consultant-api:
+    build: .
+    image: faruoq01/ai-in-action:smart-consultant-api
+    container_name: smart-consultant-api
+    volumes:
+      - /home/ai-in-action/consultant-server/credentials.json:/code/credentials.json:ro
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/code/credentials.json
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
 
 # docker-compose up -d --build

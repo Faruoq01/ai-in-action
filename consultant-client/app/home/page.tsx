@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import Cookies from "js-cookie";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { GoogleLogoutButton } from "../components/googleLogin";
@@ -15,6 +13,7 @@ import { AppImages } from "../asset/appImages";
 import { setQueryResponse } from "../lib/redux/slices/auth";
 import { SkeletonCard } from "../components/skeleton";
 import toast from "react-hot-toast";
+import remarkGfm from 'remark-gfm';
 
 const Home = () => {
   const dispatch = useAppDispatch();
@@ -64,7 +63,7 @@ const Home = () => {
             </div>
           }
           {queryResponse &&
-            <ReactMarkdown>{queryResponse}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{queryResponse}</ReactMarkdown>
           }
         </div>
       )}
