@@ -42,7 +42,12 @@ const Landing = () => {
     <Fragment>
       {loading || 
         <div className="w-full h-screen bg-gradient-to-r from-[#0B9CBC] to-[#FFFFFF] grid grid-cols-12">
-          <div className="col-span-5 flex flex-col items-start justify-center w-full h-full px-[40px] py-[30px]">
+          <div className="lg:hidden col-span-12 lg:col-span-7 flex justify-center items-center">
+            <div className="w-[500px] h-[500px] relative">
+              <Image fill src={AppImages.loglogo} alt="icon" />
+            </div>
+          </div>
+          <div className="col-span-12 lg:col-span-5 flex flex-col items-start justify-center w-full h-full px-[40px] py-[30px]">
             <div className="w-full flex flex-row items-start">
               <Image width={80} height={80} src={AppImages.logo} alt="icon" />
             </div>
@@ -61,7 +66,7 @@ const Landing = () => {
               </div>
             </div>
           </div>
-          <div className="col-span-7 flex justify-center items-center">
+          <div className="hidden col-span-12 lg:col-span-7 lg:flex justify-center items-center">
             <div className="w-[500px] h-[500px] relative">
               <Image fill src={AppImages.loglogo} alt="icon" />
             </div>
