@@ -63,7 +63,6 @@ const Home = () => {
             </div>
           }
           {queryResponse &&
-            // <ReactMarkdown remarkPlugins={[remarkGfm]}>{queryResponse}</ReactMarkdown>
             <MedicalSummary text={queryResponse} />
           }
         </div>
@@ -106,7 +105,7 @@ type MedicalSummary = {
   tags?: string[];
 };
 
-export function parseMedicalSummary(text: string): MedicalSummary {
+function parseMedicalSummary(text: string): MedicalSummary {
   const lines = text.split(/\r?\n/);
   const result: MedicalSummary = {};
 
