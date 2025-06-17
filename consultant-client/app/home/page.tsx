@@ -22,13 +22,6 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const user = useAppSelector((state) => state.auth.user);
   const queryResponse = useAppSelector((state) => state.auth.queryResponse);
-  const router = useRouter();
-
-  const onLogout = () => {
-    Cookies.remove("consultant-key");
-    Cookies.remove("auth-key");
-    router.push("/home");
-  };
 
   const handleQuerySearch = async () => {
     if (!query.trim()) return toast.error("Text query is empty");
@@ -52,7 +45,7 @@ const Home = () => {
           />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
-        <GoogleLogoutButton onLogout={onLogout}>
+        <GoogleLogoutButton>
           <Image width={15} height={15} src={AppImages.logout} alt="logout" />
         </GoogleLogoutButton>
       </div>
