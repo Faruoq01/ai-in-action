@@ -1,9 +1,36 @@
-"use client"
+"use client";
+
+import { Separator } from "@/components/ui/separator";
+import Cookies from "js-cookie";
+import Image from "next/image";
+import { useAppSelector } from "../lib/redux/controls";
+import { AppImages } from "../asset/appImages";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import SimpleChat from "../components/chat";
 
 const Home = () => {
-    return(
-        <div> Hello youre home</div>
-    )
-}
+  const userId = Cookies.get("consultant-key");
+  const user = useAppSelector((state) => state.auth.user);
+
+  return (
+    <div className="flex flex-col h-screen"> {/* full viewport height */}
+      <div>
+        <div className="flex flex-row justify-between px-[20px] py-[10px]">
+          <Avatar>
+            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          <Image width={15} height={15} src={AppImages.logout} alt="icon" />
+        </div>
+        <Separator />
+      </div>
+
+      {/* chat container fills remaining space */}
+      <div className="flex-grow overflow-auto mt-[20px]">
+        <SimpleChat />
+      </div>
+    </div>
+  );
+};
 
 export default Home;

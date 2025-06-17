@@ -24,6 +24,7 @@ const Landing = () => {
 
     try{
       const { error, payload } = await AuthService.login(param);
+      console.log(payload, "payload")
       if(!error && payload){
         dispatch(setUser(payload));
         dispatch(setLoggin(true));
