@@ -34,6 +34,7 @@ export const GoogleLogoutButton: React.FC<GoogleLogoutButtonProps> = ({ children
     googleLogout();
     Cookies.remove("consultant-key");
     Cookies.remove("auth-key");
+    Cookies.remove("consultant-gateway");
     router.push("/");
   };
 
