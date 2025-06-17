@@ -114,6 +114,11 @@
 
 body {
   @apply bg-gradient-to-r from-[#0B9CBC] to-[#FFFFFF];
+  font-family: var(--font-body), sans-serif;
+}
+
+:root {
+  --font-body: var(--font-jost);
 }
 
 @layer base {

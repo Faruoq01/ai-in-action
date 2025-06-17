@@ -53,7 +53,7 @@ const Landing = () => {
               <Image width={80} height={80} src={AppImages.logo} alt="icon" />
             </div>
             <div className="w-full h-full flex-1 flex flex-col justify-center items-start">
-              <Font style="font-[600] text-[16px] text-left text-[#333333] leading-loose">
+              <Font style="font-[600] text-[16px] text-left text-[#333333] leading-loose italic">
                 ❝Welcome to <span className="text-white font-[800]">Smart Health Consultant</span>, 
                 your secure, AI‑powered medical advisor. Simply describe your symptoms or questions, 
                 and our system will retrieve relevant real‑world health records, run specialized medical “tools” 
