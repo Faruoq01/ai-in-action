@@ -63,7 +63,8 @@ const Home = () => {
             </div>
           }
           {queryResponse &&
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{queryResponse}</ReactMarkdown>
+            // <ReactMarkdown remarkPlugins={[remarkGfm]}>{queryResponse}</ReactMarkdown>
+            <MedicalSummary text={queryResponse} />
           }
         </div>
       )}
@@ -93,6 +94,137 @@ const Home = () => {
           callback={handleQuerySearch}
         />
       </div>
+    </div>
+  );
+};
+
+type MedicalSummary = {
+  title?: string;
+  concern?: string;
+  analysis?: string;
+  actions?: string[];
+  tags?: string[];
+};
+
+export function parseMedicalSummary(text: string): MedicalSummary {
+  const lines = text.split(/\r?\n/);
+  const result: MedicalSummary = {};
+
+  let currentSection: keyof MedicalSummary | null = null;
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) continue;
+
+    if (line === 'Medical Records Analysis') {
+      currentSection = 'title';
+      result.title = '';
+      continue;
+    }
+
+    if (line === 'Concern') {
+      currentSection = 'concern';
+      result.concern = '';
+      continue;
+    }
+
+    if (line === 'Analysis') {
+      currentSection = 'analysis';
+      result.analysis = '';
+      continue;
+    }
+
+    if (line === 'Suggested Action') {
+      currentSection = 'actions';
+      result.actions = [];
+      continue;
+    }
+
+    if (line === 'Tags') {
+      currentSection = 'tags';
+      result.tags = [];
+      continue;
+    }
+
+    // Add content based on section type
+    switch (currentSection) {
+      case 'title':
+        result.title += (result.title ? ' ' : '') + line;
+        break;
+      case 'concern':
+        result.concern += (result.concern ? ' ' : '') + line;
+        break;
+      case 'analysis':
+        result.analysis += (result.analysis ? ' ' : '') + line;
+        break;
+      case 'actions':
+        if (line.startsWith('-')) {
+          result.actions?.push(line.slice(1).trim());
+        } else {
+          result.actions?.push(line); // In case bullet was omitted
+        }
+        break;
+      case 'tags':
+        const tags = line.split(',').map(tag => tag.trim());
+        result.tags?.push(...tags);
+        break;
+    }
+  }
+
+  return result;
+}
+
+type MedicalSummaryProps = {
+  text: string;
+};
+
+const MedicalSummary: React.FC<MedicalSummaryProps> = ({ text }) => {
+  const data = parseMedicalSummary(text);
+
+  return (
+    <div className="medical-summary space-y-6 text-gray-800">
+      {data.title && <h2 className="text-2xl font-bold">{data.title}</h2>}
+
+      {data.concern && (
+        <section>
+          <h3 className="text-lg font-semibold mb-1">Concern</h3>
+          <p>{data.concern}</p>
+        </section>
+      )}
+
+      {data.analysis && (
+        <section>
+          <h3 className="text-lg font-semibold mb-1">Analysis</h3>
+          <p>{data.analysis}</p>
+        </section>
+      )}
+
+      {data.actions && data.actions.length > 0 && (
+        <section>
+          <h3 className="text-lg font-semibold mb-1">Suggested Action</h3>
+          <ul className="list-disc ml-5 space-y-1">
+            {data.actions.map((action, index) => (
+              <li key={index}>{action}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {data.tags && data.tags.length > 0 && (
+        <section>
+          <h3 className="text-lg font-semibold mb-1">Tags</h3>
+          <div className="flex flex-wrap gap-2">
+            {data.tags.map((tag) => (
+              <span
+                key={tag}
+                className="px-2 py-1 text-sm bg-blue-100 text-blue-700 rounded"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 };

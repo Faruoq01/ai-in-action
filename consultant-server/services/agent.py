@@ -1,5 +1,6 @@
 import os
 import asyncio
+import re
 import vertexai
 import google.generativeai as genai
 from collections import defaultdict
@@ -130,7 +131,6 @@ class AgentService:
         )
 
         return response.text
-
 
     async def generate_all_embeddings(self):
         db = MongoDBClient.get_database()
