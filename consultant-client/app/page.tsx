@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { Fragment, useState } from "react";
 import { Loader } from "./components/loader";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 const Landing = () => {
   const dispatch = useAppDispatch();
@@ -41,13 +42,13 @@ const Landing = () => {
   return(
     <Fragment>
       {loading || 
-        <div className="w-full h-screen bg-gradient-to-r from-[#0B9CBC] to-[#FFFFFF] grid grid-cols-12">
-          <div className="lg:hidden col-span-12 lg:col-span-7 flex justify-center items-center">
-            <div className="w-[500px] h-[500px] relative">
+        <ScrollArea className="w-full h-screen bg-gradient-to-r from-[#0B9CBC] to-[#FFFFFF] grid grid-cols-12">
+          <div className="lg:hidden col-span-12 lg:col-span-7 flex justify-center items-center mt-[15px]">
+            <div className="w-[350px] h-[300px] relative">
               <Image fill src={AppImages.loglogo} alt="icon" />
             </div>
           </div>
-          <div className="col-span-12 lg:col-span-5 flex flex-col items-start justify-center w-full h-full px-[40px] py-[30px]">
+          <div className="col-span-12 lg:col-span-5 flex flex-col items-start justify-center w-full h-full px-[20px] lg:px-[40px] py-[30px]">
             <div className="w-full flex flex-row items-start">
               <Image width={80} height={80} src={AppImages.logo} alt="icon" />
             </div>
@@ -71,10 +72,12 @@ const Landing = () => {
               <Image fill src={AppImages.loglogo} alt="icon" />
             </div>
           </div>
-        </div>
+        </ScrollArea>
       }
       {loading &&
-        <Loader />
+        <div className="w-full h-screen flex justify-center items-center">
+          <Loader />
+        </div>
       }
     </Fragment>
   )

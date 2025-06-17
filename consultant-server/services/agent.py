@@ -68,7 +68,6 @@ class AgentService:
 
     async def analyze_medical_records(self, records: List[Dict[str, Any]]) -> str:
         """Expert system to analyze medical records using Gemini tools."""
-        print(records, "records")
         formatted_records = ""
         for i, record in enumerate(records, 1):
             interp = record.get("interpretation", "No interpretation provided.")

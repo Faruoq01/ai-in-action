@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ReduxProviders } from "./lib/providers/provider";
 import { ToasterProvider } from "./lib/providers/toast";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,8 +32,8 @@ export default function RootLayout({
       >
         <ReduxProviders>
           <ToasterProvider />
-          {children}
-        </ReduxProviders>
+            {children}
+          </ReduxProviders>
       </body>
     </html>
   );

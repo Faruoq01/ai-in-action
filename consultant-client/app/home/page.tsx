@@ -54,7 +54,7 @@ const Home = () => {
       {loading ? (
         <SkeletonCard />
       ) : (
-        <div className="flex-grow overflow-auto px-[50px] py-[20px]">
+        <div className="flex-grow overflow-auto px-[20px] lg:px-[50px] py-[20px]">
           {queryResponse ||
             <div className="w-full h-full flex justify-center items-center">
               <p className="text-center text-gray-400 italic">
