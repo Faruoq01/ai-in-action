@@ -68,7 +68,7 @@ class AgentService:
 
     async def analyze_medical_records(self, records: List[Dict[str, Any]]) -> str:
         """Expert system to analyze medical records using Gemini tools."""
-
+        print(records, "records")
         formatted_records = ""
         for i, record in enumerate(records, 1):
             interp = record.get("interpretation", "No interpretation provided.")
@@ -81,51 +81,53 @@ class AgentService:
             )
         
         prompt_template = f"""
-            You are a highly knowledgeable and precise medical AI assistant trained in evidence-based practice.
-
-            Below are {len(records)} patient medical records. Each record includes:
-            - An interpretation of a medical event, typically described by a clinician.
-            - A set of functional tags indicating relevant medical domains.
-
-            Your task is to analyze all records and summarize everything to provide:
-            1. Clinical Concern: A summary of the medical issue described.
-            2. Expert Analysis: A clear and accurate clinical interpretation using your medical expertise.
-            3. Suggested Action: Recommended follow-up steps, clarifications, or additional diagnostics.
-
-            Return your analysis in the following structured format:
-
-
-            Concern: 
-            -------
-            your clinical concern here 
-
-            Analysis: 
-            -------
-            your clinical reasoning and explanation
-
-            Suggested 
-            -------
-            Action: your recommendation or follow-up
-
-            ---
+            You are a highly knowledgeable and precise medical AI assistant trained in evidence-based practice. Your task is to analyze a set of patient medical records and provide a clear, concise, and clinically accurate summary. Each record includes:
+                A. Interpretation: A clinician's description of a medical event or condition.
+                B. Functional Tags: Medical domains relevant to the record (e.g., neurology, diagnostic_uncertainty).
             
-            Leave a bit of space here between Action and Tags
+            
+            Instructions
 
-            Tags: functional_tags 
+            1. Analyze All Records: Review the provided {len(records)} medical records to identify common themes, potential diagnoses, and patient concerns.
 
-            Return your analysis properly formated and presentable
+            2. Summarize Clearly: Provide a structured summary with the following sections:
+                a. Clinical Concern: A concise summary of the primary medical issues across the records, highlighting shared symptoms or concerns.
+                b. Expert Analysis: A precise clinical interpretation, linking symptoms to potential etiologies (e.g., musculoskeletal, neurological, systemic). Avoid vague or overly broad statements. Address diagnostic challenges and patient-specific factors (e.g., frustration, anxiety).
+                c. Suggested Action: Specific, actionable recommendations for follow-up, diagnostics, or treatment. Prioritize patient-centered care, specialist referrals, and addressing diagnostic uncertainty.
+                d. Tags: A consolidated list of relevant functional tags from the records, avoiding redundancy.
 
+            3. Formatting: Use markdown with clear headers (##), bullet points for actionable items, and a professional tone. Ensure no redundant text or repeated sections.
+            4. Quality Standards:
+                a. Be clinically accurate and evidence-based.
+                b. Avoid generalizations; tie analysis to specific symptoms or conditions in the records.
+                c. Address patient concerns (e.g., frustration, anxiety) to ensure empathetic recommendations.
+                d.Consolidate tags to reflect key medical domains without repetition.
+
+            Output Format
+                1. Medical Records Analysis
+
+                2. Concern
+                [Summary of the primary medical issues across the records, focusing on shared symptoms, conditions, or patient concerns.]
+
+                3. Analysis
+                [Clear, evidence-based interpretation of symptoms, potential diagnoses, and contributing factors. Highlight diagnostic challenges and patient-specific factors like anxiety or healthcare system issues.]
+
+                4. Suggested Action
+                - [Specific, actionable recommendation 1, e.g., diagnostic tests or imaging.]
+                - [Specific, actionable recommendation 2, e.g., specialist referrals.]
+                - [Additional recommendations as needed, prioritizing patient-centered care.]
+
+                5. Tags
+                [Consolidated list of functional tags, e.g., diagnostic_uncertainty, neurology, patient_education]
+
+            Finally do not forget to format it to look beautiful in a markdown react component.   
             Here are the records:
             {formatted_records}
             """
 
-        system_instruction = (
-            "You are a helpful and concise medical reasoning agent with deep knowledge of diagnostic and therapeutic recommendations."
-        )
-
         model = GenerativeModel("gemini-2.0-flash")  
         response = model.generate_content(
-            [system_instruction, prompt_template]
+            [prompt_template]
         )
 
         return response.text
