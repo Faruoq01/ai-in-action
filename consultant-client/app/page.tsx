@@ -23,12 +23,13 @@ const Landing = () => {
     }
 
     try{
+      setLoading(true);
       const { error, payload } = await AuthService.login(param);
-      console.log(payload, "payload")
+      setLoading(false);
       if(!error && payload){
         dispatch(setUser(payload));
         dispatch(setLoggin(true));
-        Cookies.set("consultant-key", payload.id);
+        Cookies.set("consultant-key", payload.user?.id);
         router.push("/home");
       }
     }catch(error){

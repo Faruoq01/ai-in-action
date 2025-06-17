@@ -12,32 +12,32 @@ export default function SimpleChat() {
   });
 
   const steps = [
-    {
-      id: '1',
-      message: 'Hello! How can I help you today?',
-      trigger: '2',
-    },
-    {
-      id: '2',
-      user: true,
-      trigger: '3',
-    },
-    {
-      id: '3',
-      message: 'Great! We offer AI consulting and chatbot development.',
-      trigger: '4',
-    },
-    {
-      id: '4',
-      user: true,
-      trigger: '5',
-    },
-    {
-      id: '5',
-      message: 'You can start by signing up on our website or asking me any questions!',
-      end: true,
-    },
-  ];  
+  {
+    "id": "1",
+    "message": "Hello! How can I help you today?",
+    "trigger": "2"
+  },
+  {
+    "id": "2",
+    "user": true,
+    "trigger": "3"
+  },
+  {
+    "id": "3",
+    "message": "Great! We offer AI consulting and chatbot development.",
+    "trigger": "4"
+  },
+  {
+    "id": "4",
+    "user": true,
+    "trigger": "5"
+  },
+  {
+    "id": "5",
+    "message": "You can start by signing up on our website or asking me any questions!",
+    "end": true
+  }
+]
 
   return (
     <>

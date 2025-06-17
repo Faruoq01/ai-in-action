@@ -18,26 +18,42 @@ class AgentService:
         self.tools = MedicalTools()
         self.tool_agents = self._create_tool_agents()
 
-    def generate_embeddings(self, query: str):
-        embeddings = self.embedding_model.get_embeddings([query])
-        return embeddings[0].values 
+    # async def generate_embeddings(self, query: str):
+    #     embeddings = self.embedding_model.get_embeddings([query])
+    #     return embeddings[0].values 
+    
+    async def generate_embeddings(self, query: str):
+        embeddings = await asyncio.to_thread(self.embedding_model.get_embeddings, [query])
+        return embeddings[0].values
  
-    def find_similar_records(self, query: str, limit=10):
-        # vector_embeddings = self.generate_embeddings(query)
-        # pipeline = [
-        #     {
-        #         "$vectorSearch": {
-        #             "index": "climate_vector_index",
-        #             "path": "embedding",
-        #             "queryVector": vector_embeddings,
-        #             "numCandidates": 100,
-        #             "limit": limit
-        #         },
-        #     },
-        #     {"$project": {"_id": 0, "embedding": 0}}
-        # ]
-        # return list(self.collection.aggregate(pipeline))
-        pass
+    async def find_similar_records(self, query: str, limit=10):
+        db = MongoDBClient.get_database()
+        vector_embeddings = await self.generate_embeddings(query)  # get 768-dim vector
+
+        pipeline = [
+            {
+                "$search": {
+                    "index": "climate_vector_index",
+                    "knnBeta": {
+                        "vector": vector_embeddings,
+                        "path": "embeddings",
+                        "k": limit
+                    }
+                }
+            },
+            {
+                "$project": {
+                    "_id": 0,
+                    "embeddings": 0
+                }
+            }
+        ]
+
+        cursor = db["health_record"].aggregate(pipeline)
+        results = []
+        async for doc in cursor:
+            results.append(doc)
+        return results
 
     def _make_tool_agent(self, tag, tool_fn, expects_list=False):
         class Agent:
@@ -88,7 +104,7 @@ class AgentService:
         for doc in docs:
             interpretation_text = doc.get("interpretation", "")
             if interpretation_text:
-                embedding = self.generate_embeddings(interpretation_text)
+                embedding = await self.generate_embeddings(interpretation_text)
             else:
                 embedding = None
 

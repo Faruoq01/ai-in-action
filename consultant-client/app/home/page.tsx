@@ -13,11 +13,11 @@ const Home = () => {
   const user = useAppSelector((state) => state.auth.user);
 
   return (
-    <div className="flex flex-col h-screen"> {/* full viewport height */}
+    <div className="flex flex-col h-screen"> 
       <div>
         <div className="flex flex-row justify-between px-[20px] py-[10px]">
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarImage src={user?.picture? user?.picture: "https://github.com/shadcn.png"} alt="@shadcn" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <Image width={15} height={15} src={AppImages.logout} alt="icon" />

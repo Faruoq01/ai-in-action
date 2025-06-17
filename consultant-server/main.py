@@ -28,9 +28,9 @@ app.include_router(prompt_router, prefix="/api/v1", tags=["Prompt"])
 async def root():
     return "Hello welcome to smart health consultant, login and try it out"
 
-# @app.on_event("startup")
-# async def start_background_task():
-#     asyncio.create_task(agent.generate_all_embeddings())
+@app.on_event("startup")
+async def start_background_task():
+    asyncio.create_task(agent.generate_all_embeddings())
 
 
 
