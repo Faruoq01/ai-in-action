@@ -9,7 +9,7 @@ from config.mongodb import MongoDBClient
 load_dotenv()
 
 GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT")
-GOOGLE_CLOUD_LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION")
+GOOGLE_CLOUD_LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION") 
 
 class AgentService:
     def __init__(self):
@@ -21,7 +21,7 @@ class AgentService:
     def generate_embeddings(self, query: str):
         embeddings = self.embedding_model.get_embeddings([query])
         return embeddings[0].values 
-
+ 
     def find_similar_records(self, query: str, limit=10):
         # vector_embeddings = self.generate_embeddings(query)
         # pipeline = [

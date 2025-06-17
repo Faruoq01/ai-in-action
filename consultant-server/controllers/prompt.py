@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from schemas.climate import PromptRequest, PromptResponse
+from schemas.agents import PromptRequest, PromptResponse
 from services.agent import AgentService
 
 router = APIRouter()

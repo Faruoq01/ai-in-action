@@ -17,4 +17,7 @@ class PromptRequest(BaseModel):
 class PromptResponse(BaseModel):
     result: str | dict | float
 
+class TokenRequest(BaseModel):
+    token: str
+
 
