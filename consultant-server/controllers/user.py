@@ -72,27 +72,20 @@ async def verify_google_token(req: TokenRequest, response: Response):
                 "token": create_jwt_token(user),
             }
             await db["auth"].insert_one(session_data)
-
-        response.set_cookie(
-            key=COOKIE_NAME,
-            value=str(auth["id"]),  
-            httponly=True,
-            max_age=86400,
-            expires=86400,
-            samesite="lax",
-            secure=True,
-            path="/"
-        )
         
-        return {"user": user}
+        return {"user": user, "key": str(auth["id"])}
     except ValueError:
         raise HTTPException(status_code=401, detail="Invalid token")
     
-async def verify_token(x_token: Annotated[str | None, Cookie()] = None):
-    if not x_token:
-        raise HTTPException(status_code=401, detail="Missing token cookie")
-    print("Token from cookie:", x_token)
-    return x_token
+async def verify_token(authorization: Annotated[str | None, Header()] = None):
+    if not authorization:
+        raise HTTPException(status_code=401, detail="Missing Authorization header")
+
+    if not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Invalid Authorization header format")
+
+    token = authorization.replace("Bearer ", "").strip()
+    return token
 
 @router.get("/user/me")
 async def get_current_user(
@@ -101,7 +94,7 @@ async def get_current_user(
     db = MongoDBClient.get_database()
     
     # Find auth session by token (which is auth._id as string)
-    auth_session = await db["auth"].find_one({"_id": ObjectId(token)})
+    auth_session = await db["auth"].find_one({"id": token})
     if not auth_session:
         raise HTTPException(status_code=401, detail="Invalid session token")
     

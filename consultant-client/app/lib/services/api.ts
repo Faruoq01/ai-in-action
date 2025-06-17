@@ -2,9 +2,14 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { store } from "../redux";
 import { setLoggin } from "../redux/slices/auth";
+import Cookies from "js-cookie";
+const key = Cookies.get("auth-key");
 
 const API = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1`
+  baseURL: `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1`,
+  headers: {
+    Authorization: `Bearer ${key}`,
+  },
 });
 
 API.interceptors.response.use(

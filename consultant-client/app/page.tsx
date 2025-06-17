@@ -27,9 +27,10 @@ const Landing = () => {
       const { error, payload } = await AuthService.login(param);
       setLoading(false);
       if(!error && payload){
-        dispatch(setUser(payload));
+        dispatch(setUser(payload?.user));
         dispatch(setLoggin(true));
         Cookies.set("consultant-key", payload.user?.id);
+        Cookies.set("auth-key", payload.key);
         router.push("/home");
       }
     }catch(error){

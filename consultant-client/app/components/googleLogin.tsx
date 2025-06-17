@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { GoogleLogin, CredentialResponse, GoogleOAuthProvider } from '@react-oauth/google';
 const client_id: any = process.env.NEXT_PUBLIC_APP_CLIENT_ID;
 
@@ -7,7 +7,8 @@ interface GoogleLoginButtonProps {
 }
 
 interface GoogleLogoutButtonProps {
-    onLogout: () => void;
+  onLogout: () => void;
+  children: ReactNode
 }
 
 export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ onSuccess }) => {
@@ -23,8 +24,8 @@ export const GoogleLoginButton: React.FC<GoogleLoginButtonProps> = ({ onSuccess 
     );
 };
 
-export const GoogleLogoutButton: React.FC<GoogleLogoutButtonProps> = ({ onLogout }) => {
+export const GoogleLogoutButton: React.FC<GoogleLogoutButtonProps> = ({ onLogout, children }) => {
   return (
-    <button onClick={onLogout}>Logout from Google</button>
+    <button onClick={onLogout}>{children}</button>
   );
 };
