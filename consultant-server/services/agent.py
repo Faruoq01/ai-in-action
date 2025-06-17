@@ -1,122 +1,143 @@
-import asyncio
 import os
+import asyncio
 import vertexai
+import google.generativeai as genai
+from collections import defaultdict
+from typing import Any, Dict, List, Optional
 from vertexai.language_models import TextEmbeddingModel
-from services.tools import MedicalTools
+from vertexai.preview.generative_models import GenerativeModel
 from dotenv import load_dotenv
 from config.mongodb import MongoDBClient
+from google.adk.agents import Agent
 
 load_dotenv()
 
 GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT")
-GOOGLE_CLOUD_LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION") 
+GOOGLE_CLOUD_LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+
+
+# ✅ Define tools
+def escalate_emergency_case(record: Dict[str, Any]) -> str:
+    return f"🚨 Emergency escalation triggered based on: {record.get('interpretation', '')}"
+
+def recommend_followup_tests(record: Dict[str, Any]) -> List[str]:
+    return ["CBC", "MRI", "Liver Function Test"]  # or dynamic logic
+
+def provide_patient_education(record: Dict[str, Any]) -> str:
+    return f"🧠 Patient Education: {record.get('interpretation', '')} suggests no immediate danger. Monitor symptoms."
+
+
 
 class AgentService:
     def __init__(self):
-        vertexai.init(project="gen-lang-client-0982532504", location="us-central1")
+        vertexai.init(project=GOOGLE_CLOUD_PROJECT, location=GOOGLE_CLOUD_LOCATION)
+        genai.configure(api_key=GEMINI_API_KEY)
         self.embedding_model = TextEmbeddingModel.from_pretrained("text-embedding-004")
-        self.tools = MedicalTools()
-        self.tool_agents = self._create_tool_agents()
+        self.model_name = "gemini-1.5-pro"
 
-    # async def generate_embeddings(self, query: str):
-    #     embeddings = self.embedding_model.get_embeddings([query])
-    #     return embeddings[0].values 
-    
     async def generate_embeddings(self, query: str):
         embeddings = await asyncio.to_thread(self.embedding_model.get_embeddings, [query])
         return embeddings[0].values
- 
+
     async def find_similar_records(self, query: str, limit=10):
         db = MongoDBClient.get_database()
-        vector_embeddings = await self.generate_embeddings(query)  # get 768-dim vector
-
+        vector_embeddings = await self.generate_embeddings(query)
         pipeline = [
             {
-                "$search": {
+                "$vectorSearch": {
                     "index": "climate_vector_index",
-                    "knnBeta": {
-                        "vector": vector_embeddings,
-                        "path": "embeddings",
-                        "k": limit
-                    }
-                }
+                    "path": "embeddings",
+                    "queryVector": vector_embeddings,
+                    "numCandidates": 100,
+                    "limit": limit
+                },
             },
             {
                 "$project": {
                     "_id": 0,
-                    "embeddings": 0
+                    "embeddings": 0,
                 }
             }
         ]
-
         cursor = db["health_record"].aggregate(pipeline)
         results = []
         async for doc in cursor:
             results.append(doc)
         return results
 
-    def _make_tool_agent(self, tag, tool_fn, expects_list=False):
-        class Agent:
-            def __init__(self, name, tool, expects_list):
-                self.name = name
-                self.tool = tool
-                self.expects_list = expects_list
+    async def analyze_medical_records(self, records: List[Dict[str, Any]]) -> str:
+        """Expert system to analyze medical records using Gemini tools."""
 
-            def invoke(self, records):
-                if self.expects_list:
-                    if not records:
-                        return {"error": "No records found"}
-                    return {"result": self.tool(records)}
-                else:
-                    if not records:
-                        return {"error": "No records found"}
-                    return {"result": self.tool(records[0])}
+        formatted_records = ""
+        for i, record in enumerate(records, 1):
+            interp = record.get("interpretation", "No interpretation provided.")
+            tags = record.get("functional_tags", "None")
+            formatted_records += (
+                f"---\n"
+                f"### Record {i}\n"
+                f"**Tags**: {tags}\n"
+                f"**Interpretation**: {interp}\n"
+            )
+        
+        prompt_template = f"""
+            You are a highly knowledgeable and precise medical AI assistant trained in evidence-based practice.
 
-        return Agent(name=tag, tool=tool_fn, expects_list=expects_list)
+            Below are {len(records)} patient medical records. Each record includes:
+            - An interpretation of a medical event, typically described by a clinician.
+            - A set of functional tags indicating relevant medical domains.
 
-    def _create_tool_agents(self):
-        return {
-            "cardiology": self._make_tool_agent("cardiology", self.tools.cardiology, expects_list=False),
-            "neurology": self._make_tool_agent("neurology", self.tools.neurology, expects_list=False),
-            "autoimmune": self._make_tool_agent("autoimmune", self.tools.autoimmune, expects_list=False),
-            "pharmacology": self._make_tool_agent("pharmacology", self.tools.pharmacology, expects_list=False),
-            "diagnostic_uncertainty": self._make_tool_agent("diagnostic_uncertainty", self.tools.diagnostic_uncertainty, expects_list=False),
-            "patient_education": self._make_tool_agent("patient_education", self.tools.patient_education, expects_list=False),
-        }
+            Your task is to analyze each record and provide:
+            1. **Clinical Concern**: A summary of the medical issue described.
+            2. **Expert Analysis**: A clear and accurate clinical interpretation using your medical expertise.
+            3. **Suggested Action**: Recommended follow-up steps, clarifications, or additional diagnostics.
 
-    def get_tool_agent(self, tag):
-        return self.tool_agents.get(tag)
-    
-    
+            Return your analysis in the following structured format:
+
+            ---
+            ### Record {len(records)}  
+            **Tags**: [functional_tags] 
+            **Concern**: *[your clinical concern here]*  
+            **Analysis**: *[your clinical reasoning and explanation]*  
+            **Suggested Action**: *[your recommendation or follow-up]*  
+            ---
+
+            Return your analysis in the following markdown code block format, sound natural with proper indentation and spacing, so that it can be directly rendered inside a React <pre> component:
+
+            Here are the records:
+            {formatted_records}
+            """
+
+        system_instruction = (
+            "You are a helpful and concise medical reasoning agent with deep knowledge of diagnostic and therapeutic recommendations."
+        )
+
+        model = GenerativeModel("gemini-2.0-flash")  
+        response = model.generate_content(
+            [system_instruction, prompt_template]
+        )
+
+        return response.text
+
+
     async def generate_all_embeddings(self):
         db = MongoDBClient.get_database()
         collection = db["health_record"]
-
         cursor = collection.find({
             "$or": [
                 {"embeddings": {"$exists": False}},
                 {"embeddings": None}
             ]
         })
-
         docs = await cursor.to_list(length=None)
 
         for doc in docs:
             interpretation_text = doc.get("interpretation", "")
-            if interpretation_text:
-                embedding = await self.generate_embeddings(interpretation_text)
-            else:
-                embedding = None
-
+            embedding = await self.generate_embeddings(interpretation_text) if interpretation_text else None
             await collection.update_one(
                 {"_id": doc["_id"]},
                 {"$set": {"embeddings": embedding}}
             )
-
             print(f"Updated document {doc['_id']} with embeddings")
-
-            # Wait ~72 seconds before next request (5 per 6 mins)
             await asyncio.sleep(72)
-            print("hello im done")
-
         return "Completed"

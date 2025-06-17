@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from schemas.agents import PromptRequest, PromptResponse
 from services.agent import AgentService
 from config.mongodb import MongoDBClient
@@ -8,26 +8,22 @@ router = APIRouter()
 # Global instance of AgentService for simplicity
 agent_service = AgentService()
 
+
 @router.post("/prompt", response_model=PromptResponse)
 async def run_prompt(request: PromptRequest):
-    # Find similar records based on the query
+    # Step 1: Find similar medical records via vector search
     records = await agent_service.find_similar_records(request.query)
-    print(records, "records")
+    if not records:
+        raise HTTPException(status_code=404, detail="No relevant records found")
 
-    # # Retrieve the tool agent based on the tool_tag
-    # tool_agent = agent_service.get_tool_agent(request.tool_tag)
-    # if tool_agent is None:
-    #     raise HTTPException(status_code=400, detail="Invalid tool tag")
-    
-    # # Invoke the tool with the appropriate input
-    # result = tool_agent.invoke(records)
-    
-    # # Handle errors returned by the tool
-    # if "error" in result:
-    #     raise HTTPException(status_code=404, detail=result["error"])
-    
-    # return result
-    return PromptResponse(result="This is a text response")
+    # Step 2: Analyze those records using the multi-agent tool routing logic
+    try:
+        analysis_result = await agent_service.analyze_medical_records(records)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Agent analysis failed: {str(e)}")
+
+    # Step 3: Return results as structured PromptResponse
+    return PromptResponse(result=analysis_result)
 
 
 @router.get("/embeddings/createIndex", response_model=PromptResponse)

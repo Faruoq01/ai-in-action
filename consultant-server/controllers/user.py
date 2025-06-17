@@ -2,7 +2,6 @@ import datetime
 import os
 import uuid
 from jose import jwt
-from uuid import uuid4
 from typing import Annotated
 from bson import ObjectId
 from fastapi import APIRouter, Cookie, Depends, File, HTTPException, Header, Request, Response, UploadFile
