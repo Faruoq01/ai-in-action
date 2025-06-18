@@ -3,7 +3,7 @@
 HealthMentor is an AI-powered healthcare advisor that takes user queries, searches a vectorized database of medical records, and returns a structured, clinical-grade summary. It empowers patients and practitioners with intelligent insights extracted from real-world health records.
 
 > 🌐 **Live Frontend**: [http://smart-consultant.online](http://smart-consultant.online)  
-> 🔗 **Backend API**: [http://smart-consultant.online](http://smart-consultant.online)
+> 🔗 **Backend API**: [http://api.smart-consultant.online](http://api.smart-consultant.online)
 
 ---
 
