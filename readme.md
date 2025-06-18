@@ -52,8 +52,9 @@ Both the **frontend** and **backend** apps are Dockerized and can be launched us
 
 
 git clone https://github.com/your-username/healthmentor.git
+
 cd consultant-client   # frontend
-# OR
+- OR
 cd consultant-server   # backend
 
 docker compose up -d
@@ -62,32 +63,32 @@ docker compose up -d
 
 ### 📦 Docker Hub Images
 
-# Backend
-docker pull faruoq01/ai-in-action:smart-consultant-api
+-** Backend
+** docker pull faruoq01/ai-in-action:smart-consultant-api
 
-# Frontend
-docker pull faruoq01/ai-in-action:smart-consultant-client
+-** Frontend
+** docker pull faruoq01/ai-in-action:smart-consultant-client
 
 ---
 
 ### 🌐 Environment Variable Setup
 
-# Frontend
+- Frontend
 
-NEXT_PUBLIC_APP_CLIENT_ID=        # Google OAuth Client ID for login
-NEXT_PUBLIC_BASE_URL=            # Backend API base URL (e.g., http://smart-consultant.online/api)
+- ** NEXT_PUBLIC_APP_CLIENT_ID ** =        # Google OAuth Client ID for login
+- ** NEXT_PUBLIC_BASE_URL ** =            # Backend API base URL (e.g., https://api.smart-consultant.online)
 
-# Backend
+- Backend
 
-GOOGLE_CLOUD_PROJECT=            # Google Cloud project ID
-GOOGLE_CLOUD_LOCATION=           # GCP region (e.g., us-central1)
-GOOGLE_CLIENT_ID=                # Google OAuth Client ID
-GOOGLE_APPLICATION_CREDENTIALS=  # Path to your service account credentials (JSON)
-DATABASE_NAME=                   # MongoDB database name
-MONGO_MAX_POOL_SIZE=             # MongoDB max connection pool
-MONGO_MIN_POOL_SIZE=             # MongoDB min connection pool
-JWT_SECRET_KEY=                  # Secret key for JWT token generation
-CONNECTION_STRING=               # MongoDB Atlas connection URI
+- ** GOOGLE_CLOUD_PROJECT ** =            # Google Cloud project ID
+- ** GOOGLE_CLOUD_LOCATION ** =           # GCP region (e.g., us-central1)
+- ** GOOGLE_CLIENT_ID ** =                # Google OAuth Client ID
+- ** GOOGLE_APPLICATION_CREDENTIALS ** =  # Path to your service account credentials (JSON)
+- ** DATABASE_NAME ** =                   # MongoDB database name
+- ** MONGO_MAX_POOL_SIZE ** =             # MongoDB max connection pool
+- ** MONGO_MIN_POOL_SIZE ** =             # MongoDB min connection pool
+- ** JWT_SECRET_KEY ** =                  # Secret key for JWT token generation
+- ** CONNECTION_STRING ** =               # MongoDB Atlas connection URI
 
 ---
 
