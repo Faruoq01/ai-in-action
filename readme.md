@@ -51,7 +51,7 @@ Both the **frontend** and **backend** apps are Dockerized and can be launched us
 1. **Clone the repo** and navigate to each service folder:
 
 
-git clone https://github.com/your-username/healthmentor.git
+git clone https://github.com/Faruoq01/healthmentor.git
 
 cd consultant-client   # frontend
 - OR
