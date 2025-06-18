@@ -54,12 +54,22 @@ const Home = () => {
       {loading ? (
         <SkeletonCard />
       ) : (
-        <div className="flex-grow overflow-auto px-[20px] lg:px-[50px] py-[20px]">
+        <div className="flex-grow overflow-auto px-[20px] lg:px-[50px] py-[20px] flex flex-col">
           {queryResponse ||
-            <div className="w-full h-full flex justify-center items-center">
-              <p className="text-center text-gray-400 italic">
-                Your smart health assistant is standing by. Ask anything to get started.
-              </p>
+            <div className="w-full h-full flex flex-col justify-center items-center">
+              <p className="text-[18px] mt-[20px] italic font-[600]">Your smart health assistant is standing by. Ask anything to get started.</p>
+              <div className="text-center text-gray-400 italic mt-[30px]">
+                {
+                  suggestions?.map((v: string, index) => {
+                    return(
+                      <div 
+                        onClick={() => setQuery(v)}
+                        className="border-[1px] select-none italic border-[#d7d7d7] px-[10px] py-[5px] mb-[15px] rounded-[20px] text-left text-[12px]" 
+                        key={index}>{v}</div>
+                    )
+                  })
+                }
+              </div>
             </div>
           }
           {queryResponse &&
@@ -96,6 +106,19 @@ const Home = () => {
     </div>
   );
 };
+
+const suggestions = [
+  "Experiencing persistent headaches accompanied by blurry vision and dizziness.",
+  "Severe chest discomfort after climbing stairs; feels tightness and shortness of breath.",
+  "Noticed swelling in both ankles with fatigue and shortness of breath in the evenings.",
+  "Recurring abdominal cramps and diarrhea after eating dairy products.",
+  "Pain and stiffness in fingers, especially in the morning; takes a while to loosen up.",
+  "Tingling and numbness in the right hand that worsens at night.",
+  "Episodes of fast heartbeat and lightheadedness when getting up from a sitting position.",
+  "Chronic joint pain in knees and elbows, worsens during rainy weather.",
+  "Sharp pain under the right rib cage after meals, sometimes with nausea.",
+  "Experiencing fatigue and unexplained weight loss over the past month."
+];
 
 type MedicalSummary = {
   title?: string;
@@ -179,6 +202,7 @@ type MedicalSummaryProps = {
 
 const MedicalSummary: React.FC<MedicalSummaryProps> = ({ text }) => {
   const data = parseMedicalSummary(text);
+  console.log(data, "data")
 
   return (
     <div className="medical-summary space-y-6 text-gray-800">
