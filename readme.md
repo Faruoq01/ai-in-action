@@ -2,6 +2,9 @@
 
 HealthMentor is an AI-powered healthcare advisor that takes user queries, searches a vectorized database of medical records, and returns a structured, clinical-grade summary. It empowers patients and practitioners with intelligent insights extracted from real-world health records.
 
+> 🌐 **Live Frontend**: [http://smart-consultant.online](http://smart-consultant.online)  
+> 🔗 **Backend API**: [http://smart-consultant.online](http://smart-consultant.online)
+
 ---
 
 ## 🚀 Project Overview
@@ -38,6 +41,53 @@ In many parts of Africa, especially Nigeria, patients face limited access to spe
 - **Medical AI Reasoning**: Gemini 2.0 Flash (Google)
 - **Database**: MongoDB Atlas
 - **Authentication**: OAuth Token validation via FastAPI headers
+
+## ⚙️ Deployment with Docker Compose
+
+Both the **frontend** and **backend** apps are Dockerized and can be launched using their respective `docker-compose.yml` files.
+
+### 🐳 Docker Compose Setup
+
+1. **Clone the repo** and navigate to each service folder:
+
+
+git clone https://github.com/your-username/healthmentor.git
+cd consultant-client   # frontend
+# OR
+cd consultant-server   # backend
+
+docker compose up -d
+
+---
+
+### 📦 Docker Hub Images
+
+# Backend
+docker pull faruoq01/ai-in-action:smart-consultant-api
+
+# Frontend
+docker pull faruoq01/ai-in-action:smart-consultant-client
+
+---
+
+### 🌐 Environment Variable Setup
+
+# Frontend
+
+NEXT_PUBLIC_APP_CLIENT_ID=        # Google OAuth Client ID for login
+NEXT_PUBLIC_BASE_URL=            # Backend API base URL (e.g., http://smart-consultant.online/api)
+
+# Backend
+
+GOOGLE_CLOUD_PROJECT=            # Google Cloud project ID
+GOOGLE_CLOUD_LOCATION=           # GCP region (e.g., us-central1)
+GOOGLE_CLIENT_ID=                # Google OAuth Client ID
+GOOGLE_APPLICATION_CREDENTIALS=  # Path to your service account credentials (JSON)
+DATABASE_NAME=                   # MongoDB database name
+MONGO_MAX_POOL_SIZE=             # MongoDB max connection pool
+MONGO_MIN_POOL_SIZE=             # MongoDB min connection pool
+JWT_SECRET_KEY=                  # Secret key for JWT token generation
+CONNECTION_STRING=               # MongoDB Atlas connection URI
 
 ---
 
