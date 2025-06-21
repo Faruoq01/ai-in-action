@@ -1,10 +1,7 @@
 import os
 import asyncio
-import re
 import vertexai
-import google.generativeai as genai
-from collections import defaultdict
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 from vertexai.language_models import TextEmbeddingModel
 from vertexai.preview.generative_models import GenerativeModel
 from dotenv import load_dotenv
@@ -15,25 +12,10 @@ load_dotenv()
 
 GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT")
 GOOGLE_CLOUD_LOCATION = os.environ.get("GOOGLE_CLOUD_LOCATION")
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
-
-
-# ✅ Define tools
-def escalate_emergency_case(record: Dict[str, Any]) -> str:
-    return f"🚨 Emergency escalation triggered based on: {record.get('interpretation', '')}"
-
-def recommend_followup_tests(record: Dict[str, Any]) -> List[str]:
-    return ["CBC", "MRI", "Liver Function Test"]  # or dynamic logic
-
-def provide_patient_education(record: Dict[str, Any]) -> str:
-    return f"🧠 Patient Education: {record.get('interpretation', '')} suggests no immediate danger. Monitor symptoms."
-
-
 
 class AgentService:
     def __init__(self):
         vertexai.init(project=GOOGLE_CLOUD_PROJECT, location=GOOGLE_CLOUD_LOCATION)
-        genai.configure(api_key=GEMINI_API_KEY)
         self.embedding_model = TextEmbeddingModel.from_pretrained("text-embedding-004")
         self.model_name = "gemini-1.5-pro"
 
